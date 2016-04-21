@@ -93,8 +93,11 @@ void SFApp::OnUpdateWorld() {
         p->HandleCollision();
         a->HandleCollision();
       }
+      if(player->CollidesWith(a)){
+	player->HandleCollision();  /* change this */
     }
   }
+}
 
   // remove dead aliens (the long way)
   list<shared_ptr<SFAsset>> tmp;
