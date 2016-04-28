@@ -5,7 +5,7 @@ SFApp::SFApp(std::shared_ptr<SFWindow> window) : fire(0), is_running(true), sf_w
   SDL_GetRendererOutputSize(sf_window->getRenderer(), &canvas_w, &canvas_h);
 
   app_box = make_shared<SFBoundingBox>(Vector2(canvas_w, canvas_h), canvas_w, canvas_h);
-  auto player  = make_shared<SFAsset>(SFASSET_PLAYER, sf_window);
+  player  = make_shared<SFAsset>(SFASSET_PLAYER, sf_window);
   auto player_pos = Point2(canvas_w/2, 22);
   player->SetPosition(player_pos);
 
@@ -76,7 +76,6 @@ void SFApp::OnUpdateWorld() {
   for(auto p: projectiles) {
     p->GoNorth();
   }
-
   for(auto c: coins) {
     c->GoNorth();
   }
@@ -95,11 +94,11 @@ void SFApp::OnUpdateWorld() {
       }
   }
 }
-  /*for(auto a : aliens){
+  for(auto a : aliens){
 	if(player->CollidesWith(a)){ 
 	 player->HandleCollision();
    }
-  }*/
+  }
 
 
   // remove dead aliens (the long way)
