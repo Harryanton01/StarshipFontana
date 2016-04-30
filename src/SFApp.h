@@ -29,7 +29,7 @@ public:
   void	  PlayerSouth();
   void	  PlayerEast();
   void	  PlayerWest();
-  void	  AddToScore(int);
+  void	  AddToScore(int x);
   void    FireProjectile();
   int	  GetScore();
 private:

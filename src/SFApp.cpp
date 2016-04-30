@@ -49,11 +49,11 @@ for(int i=0; i<number_of_aliens; i++) {
 
 SFApp::~SFApp() {
 }
-int SFApp::GetScore(){
-	return score;
+int SFApp::GetScore(){	
+	return score;		//This function gets the score
 }
 void SFApp::AddToScore(int x){
-score += x;
+score += x;			//This function adds the integer x to the score
 }
 
 
@@ -125,11 +125,11 @@ int SFApp::OnExecute() {
   }
   if(coinsN == 0){
     int scores = GetScore();
-    cout<<"Congratulations you won! Score: "<< scores << endl;
+    cout<<"Congratulations you won! Score: "<< scores << endl;	// <- when player collides with coin
 }
  else if(player_alive==false){
     int scores = GetScore();
-    cout<<"Game Over, an alien just destroyed you! Score: "<< scores << endl;
+    cout<<"Game Over, an alien just destroyed you! Score: "<< scores << endl; // <- when player collides with alien
 }
 }
 
@@ -168,26 +168,25 @@ void SFApp::OnUpdateWorld() {
 }
 
   for(auto w : walls){
-    for(auto p : projectiles){
-	if(p-> CollidesWith(w)){ //Stops projectiles going through walls
+    for(auto p : projectiles){	
+	if(p-> CollidesWith(w)){ 	//Stops projectiles going through walls
 	  p->SetNotAlive();
 	  p->GoSouth();
-	  AddToScore(-50);
     }
   }
 }
   for(auto c : coins){
    if(c->CollidesWith(player)){
-	c->SetNotAlive();
+	c->SetNotAlive();		//Code to detect collision between player and coin
 	AddToScore(200);
-		coinsN--;
+	coinsN--;
 }
 }
 
  for(auto a : aliens){
    if(a->CollidesWith(player)){
-	AddToScore(-100);
-		player_alive=false;
+	AddToScore(-100);		//Code to detect collision between player and alien
+	player_alive=false;
 }
 }
 
