@@ -1,6 +1,6 @@
 #include "SFApp.h"
 
-SFApp::SFApp(std::shared_ptr<SFWindow> window) : fire(0), is_running(true), sf_window(window) {
+SFApp::SFApp(std::shared_ptr<SFWindow> window) : fire(0), score(0), coinsN(1), is_running(true), player_alive(true), sf_window(window) {
   int canvas_w, canvas_h;
   SDL_GetRendererOutputSize(sf_window->getRenderer(), &canvas_w, &canvas_h);
 
@@ -8,10 +8,6 @@ SFApp::SFApp(std::shared_ptr<SFWindow> window) : fire(0), is_running(true), sf_w
   player  = make_shared<SFAsset>(SFASSET_PLAYER, sf_window);
   auto player_pos = Point2(canvas_w/2, 22);
   player->SetPosition(player_pos);
-  int score=0;
-  int ALIEN_SCORE=50;
-  int WALL_SCORE=-50;
-  int COIN_SCORE=200;
 
   const int number_of_aliens = 3;
   for(int i=0; i<number_of_aliens; i++) {
@@ -27,7 +23,6 @@ for(int i=0; i<number_of_aliens; i++) {
     alien->SetPosition(pos);
     aliens.push_back(alien);
   }
-
 
   auto coin = make_shared<SFAsset>(SFASSET_COIN, sf_window);
   auto pos  = Point2((canvas_w*0.85), 400);                           //coin placement
@@ -54,11 +49,14 @@ for(int i=0; i<number_of_aliens; i++) {
 
 SFApp::~SFApp() {
 }
-
-/*int SFApp::AddToScore(int x){
-return score += x;
+int SFApp::GetScore(){
+	return score;
 }
-*/
+void SFApp::AddToScore(int x){
+score += x;
+}
+
+
 /**
  * Handle all events that come from SDL.
  * These are timer or keyboard events.
@@ -119,12 +117,20 @@ void SFApp::OnEvent(SFEvent& event) {
 int SFApp::OnExecute() {
   // Execute the app
   SDL_Event event;
-  while (SDL_WaitEvent(&event) && is_running) {
+  while (SDL_WaitEvent(&event) && is_running && coinsN!=0 && player_alive==true) {
     // wrap an SDL_Event with our SFEvent
     SFEvent sfevent((const SDL_Event) event);
     // handle our SFEvent
     OnEvent(sfevent);
   }
+  if(coinsN == 0){
+    int scores = GetScore();
+    cout<<"Congratulations you won! Score: "<< scores << endl;
+}
+ else if(player_alive==false){
+    int scores = GetScore();
+    cout<<"Game Over, an alien just destroyed you! Score: "<< scores << endl;
+}
 }
 
 void SFApp::PlayerNorth(){
@@ -149,8 +155,6 @@ void SFApp::OnUpdateWorld() {
     p->GoNorth();
   }
 
-  // Update enemy positions
-
 
   // Detect collisions
   for(auto p : projectiles) {
@@ -158,6 +162,7 @@ void SFApp::OnUpdateWorld() {
       if(p->CollidesWith(a)) {
         p->HandleCollision();
         a->HandleCollision();
+	AddToScore(100);
     }
   }
 }
@@ -167,9 +172,26 @@ void SFApp::OnUpdateWorld() {
 	if(p-> CollidesWith(w)){ //Stops projectiles going through walls
 	  p->SetNotAlive();
 	  p->GoSouth();
+	  AddToScore(-50);
     }
   }
 }
+  for(auto c : coins){
+   if(c->CollidesWith(player)){
+	c->SetNotAlive();
+	AddToScore(200);
+		coinsN--;
+}
+}
+
+ for(auto a : aliens){
+   if(a->CollidesWith(player)){
+	AddToScore(-100);
+		player_alive=false;
+}
+}
+
+
   // remove dead aliens (the long way)
   list<shared_ptr<SFAsset>> tmp;
   for(auto a : aliens) {
@@ -199,7 +221,9 @@ void SFApp::OnRender() {
     w->OnRender();
 }
   for(auto c: coins) {
+    if(c->IsAlive()){
     c->OnRender();
+}
   }
 
   // Switch the off-screen buffer to be on-screen

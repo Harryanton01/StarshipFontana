@@ -29,10 +29,12 @@ public:
   void	  PlayerSouth();
   void	  PlayerEast();
   void	  PlayerWest();
-  //int	  AddToScore(int x);
+  void	  AddToScore(int);
   void    FireProjectile();
+  int	  GetScore();
 private:
   bool                    is_running;
+  bool			  player_alive;
 
   shared_ptr<SFWindow>       sf_window;
 
@@ -44,5 +46,7 @@ private:
   list<shared_ptr<SFAsset> > walls;
 
   int fire;
+  int score;
+  int coinsN;
 };
 #endif
