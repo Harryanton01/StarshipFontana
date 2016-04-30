@@ -18,12 +18,16 @@ SFAsset::SFAsset(SFASSETTYPE type, std::shared_ptr<SFWindow> window): type(type)
   case SFASSET_COIN:
     sprite = IMG_LoadTexture(sf_window->getRenderer(), "assets/coin.png");
     break;
-  }
+  case SFASSET_WALL:
+    sprite = IMG_LoadTexture(sf_window->getRenderer(), "assets/wall.png");
+    break; 
+ //wall sprite by hyptosis  url:
 
   if(!sprite) {
     cerr << "Could not load asset of type " << type << endl;
     throw SF_ERROR_LOAD_ASSET;
   }
+}
 
   // Get texture width & height
   int w, h;
@@ -32,6 +36,7 @@ SFAsset::SFAsset(SFASSETTYPE type, std::shared_ptr<SFWindow> window): type(type)
   // Initialise bounding box
   bbox = make_shared<SFBoundingBox>(SFBoundingBox(Vector2(0.0f, 0.0f), w, h));
 }
+
 
 SFAsset::SFAsset(const SFAsset& a) {
   sprite = a.sprite;
@@ -95,7 +100,7 @@ void SFAsset::OnRender() {
 
 void SFAsset::GoWest() {
   Vector2 c = *(bbox->centre) + Vector2(-5.0f, 0.0f);
-  if(!(c.getX() < 0) && SFASSET_PLAYER==type) {
+  if(!(c.getX() < 0)) {
     bbox->centre.reset();
     bbox->centre = make_shared<Vector2>(c);
   }
@@ -106,7 +111,7 @@ void SFAsset::GoEast() {
   SDL_GetRendererOutputSize(sf_window->getRenderer(), &w, &h);
 
   Vector2 c = *(bbox->centre) + Vector2(5.0f, 0.0f);
-  if(!(c.getX() > w) && SFASSET_PLAYER==type) {
+  if(!(c.getX() > w)) {
     bbox->centre.reset();
     bbox->centre = make_shared<Vector2>(c);
   }
@@ -120,11 +125,14 @@ if(!(c.getY() > h)) {
   bbox->centre.reset();
   bbox->centre = make_shared<Vector2>(c);
   }
+else if(type == SFASSET_PROJECTILE){
+	SetNotAlive();
+}
 }
 
 void SFAsset::GoSouth() {
   Vector2 c = *(bbox->centre) + Vector2(0.0f, -5.0f);
-if(!(c.getY() < 0) && SFASSET_PLAYER==type) {
+if(!(c.getY() < 0)) {
   bbox->centre.reset();
   bbox->centre = make_shared<Vector2>(c);
   }
@@ -150,7 +158,4 @@ void SFAsset::HandleCollision() {
   if(SFASSET_PROJECTILE == type || SFASSET_ALIEN == type) { 
     SetNotAlive();
   } 
-if(SFASSET_PLAYER == type){
-	
-}
 }
