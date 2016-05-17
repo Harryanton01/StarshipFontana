@@ -181,7 +181,7 @@ void SFApp::OnUpdateWorld() {
 	AddToScore(-100);
         int scores = GetScore();
         cout<<"Game Over, an alien just defeated you! Your score is: "<< scores << endl; // Code to detect collision between player and alien		
-	is_running=false
+	is_running=false;
 }
 }
 
