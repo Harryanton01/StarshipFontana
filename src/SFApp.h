@@ -34,7 +34,6 @@ public:
   int	  GetScore();
 private:
   bool                    is_running;
-  bool			  player_alive;
 
   shared_ptr<SFWindow>       sf_window;
 
@@ -47,6 +46,5 @@ private:
 
   int fire;
   int score;
-  int coinsN;
 };
 #endif

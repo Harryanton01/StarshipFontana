@@ -1,6 +1,6 @@
 #include "SFApp.h"
 
-SFApp::SFApp(std::shared_ptr<SFWindow> window) : fire(0), score(0), coinsN(1), is_running(true), player_alive(true), sf_window(window) {
+SFApp::SFApp(std::shared_ptr<SFWindow> window) : fire(0), score(0), is_running(true), sf_window(window) {
   int canvas_w, canvas_h;
   SDL_GetRendererOutputSize(sf_window->getRenderer(), &canvas_w, &canvas_h);
 
@@ -84,7 +84,7 @@ void SFApp::OnEvent(SFEvent& event) {
     PlayerEast();
 
       for(auto w : walls){
-	if(player->CollidesWith(w)){ 
+	if(player->CollidesWith(w)){ // if player collides with wall while this event is active go left
 	 PlayerWest();
    }
   }
@@ -117,20 +117,12 @@ void SFApp::OnEvent(SFEvent& event) {
 int SFApp::OnExecute() {
   // Execute the app
   SDL_Event event;
-  while (SDL_WaitEvent(&event) && is_running && coinsN!=0 && player_alive==true) {
+  while (SDL_WaitEvent(&event) && is_running) {
     // wrap an SDL_Event with our SFEvent
     SFEvent sfevent((const SDL_Event) event);
     // handle our SFEvent
     OnEvent(sfevent);
   }
-  if(coinsN == 0){
-    int scores = GetScore();
-    cout<<"Congratulations you won! Score: "<< scores << endl;	// <- when player collides with coin
-}
- else if(player_alive==false){
-    int scores = GetScore();
-    cout<<"Game Over, an alien just destroyed you! Score: "<< scores << endl; // <- when player collides with alien
-}
 }
 
 void SFApp::PlayerNorth(){
@@ -155,7 +147,6 @@ void SFApp::OnUpdateWorld() {
     p->GoNorth();
   }
 
-
   // Detect collisions
   for(auto p : projectiles) {
     for(auto a : aliens) {
@@ -179,14 +170,18 @@ void SFApp::OnUpdateWorld() {
    if(c->CollidesWith(player)){
 	c->SetNotAlive();		//Code to detect collision between player and coin
 	AddToScore(200);
-	coinsN--;
+        int scores = GetScore();
+        cout<<"Congratulations you won! Your score is: "<< scores << endl;   
+	is_running=false;
 }
 }
 
  for(auto a : aliens){
    if(a->CollidesWith(player)){
-	AddToScore(-100);		//Code to detect collision between player and alien
-	player_alive=false;
+	AddToScore(-100);
+        int scores = GetScore();
+        cout<<"Game Over, an alien just defeated you! Your score is: "<< scores << endl; // Code to detect collision between player and alien		
+	is_running=false
 }
 }
 
