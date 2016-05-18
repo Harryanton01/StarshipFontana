@@ -21,7 +21,7 @@ SFAsset::SFAsset(SFASSETTYPE type, std::shared_ptr<SFWindow> window): type(type)
   case SFASSET_WALL:
     sprite = IMG_LoadTexture(sf_window->getRenderer(), "assets/wall.png");
     break; 
- //wall sprite by hyptosis  url:
+ //wall sprite by hyptosis  url: http://opengameart.org/content/lots-of-free-2d-tiles-and-sprites-by-hyptosis
 
   if(!sprite) {
     cerr << "Could not load asset of type " << type << endl;
