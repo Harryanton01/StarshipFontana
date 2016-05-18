@@ -32,4 +32,5 @@ from the top-level directory.  The game will expect to find the
 ## Credits ##
 The sprites in this game come directly from 
 [SpriteLib](http://www.widgetworx.com/widgetworx/portfolio/spritelib.html) and are used
-under the terms of the [CPL 1.0](http://opensource.org/licenses/cpl1.0.php).
+under the terms of the [CPL 1.0](http://opensource.org/licenses/cpl1.0.php). The wall sprite 
+was created by Hyptosis and was used under the terms of the [CC 3.0](http://www.newgrounds.com/art/view/hyptosis/sprites-and-tiles-for-you).
